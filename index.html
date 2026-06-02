@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>鏈潵瀵硅薄娴嬭瘯</title>
-<meta name="description" content="15閬撻锛岀湅鐪嬩綘鐨勬湭鏉ュ璞℃槸浠€涔堢被鍨?>
+<title>未来对象测试</title>
+<meta name="description" content="15道题，看看你的未来对象是什么类型">
 <style>
 :root {
   --bg: #fdf6f0; --card-bg: #ffffff; --text-primary: #5c3a3a; --text-secondary: #8c7a7a;
@@ -69,17 +69,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
   <!-- DENIED -->
   <div class="page" id="page-denied">
-    <div class="gate-icon">馃敀</div>
-    <div class="gate-title" id="denied-title">閾炬帴宸插け鏁?/div>
-    <div class="gate-sub" id="denied-sub">璇ユ祴璇曢摼鎺ュ凡琚娇鐢ㄦ垨涓嶅瓨鍦ㄣ€?br>璇疯仈绯诲崠瀹惰幏鍙栨柊鐨勬祴璇曢摼鎺ャ€?/div>
+    <div class="gate-icon">🔒</div>
+    <div class="gate-title" id="denied-title">链接已失效</div>
+    <div class="gate-sub" id="denied-sub">该测试链接已被使用或不存在。<br>请联系卖家获取新的测试链接。</div>
   </div>
 
   <!-- START -->
   <div class="page active" id="page-start">
-    <div class="hero-icon">馃敪</div>
-    <div class="hero-title">鏈潵瀵硅薄娴嬭瘯</div>
-    <div class="hero-sub">15 閬撻<br>鐪嬬湅浣犵殑鏈潵瀵硅薄鏄粈涔堢被鍨?/div>
-    <button class="btn-start" onclick="startQuiz()">寮€濮嬫祴璇?/button>
+    <div class="hero-icon">🔭</div>
+    <div class="hero-title">未来对象测试</div>
+    <div class="hero-sub">15 道题<br>看看你的未来对象是什么类型</div>
+    <button class="btn-start" onclick="startQuiz()">开始测试</button>
   </div>
 
   <!-- QUIZ -->
@@ -89,17 +89,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
       <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
     </div>
     <div class="question-card">
-      <div class="question-num" id="question-num">绗?1 棰?/div>
+      <div class="question-num" id="question-num">第 1 题</div>
       <div class="question-title" id="question-title"></div>
       <div class="options" id="options-container"></div>
     </div>
-    <div class="share-hint">鐐瑰嚮閫夐」鑷姩杩涘叆涓嬩竴棰?/div>
+    <div class="share-hint">点击选项自动进入下一题</div>
   </div>
 
   <!-- LOADING -->
   <div class="page" id="page-loading">
     <div class="loading-spinner"></div>
-    <div class="loading-text">姝ｅ湪鐢熸垚缁撴灉...</div>
+    <div class="loading-text">正在生成结果...</div>
   </div>
 
   <!-- RESULT -->
@@ -110,13 +110,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
         <div class="result-main-title" id="result-type-name"></div>
       </div>
       <div class="result-body">
-        <div class="section"><div class="section-label">鉁?浣犵殑鎬ф牸</div><div class="section-text" id="result-personality"></div></div>
-        <div class="section"><div class="section-label">鉁?鏈潵瀵硅薄</div><div class="section-text" id="result-partner"></div></div>
-        <div class="section"><div class="section-label">鉁?缂樺垎绾跨储</div><div class="fate-grid" id="fate-grid"></div></div>
+        <div class="section"><div class="section-label">✦ 你的性格</div><div class="section-text" id="result-personality"></div></div>
+        <div class="section"><div class="section-label">✦ 未来对象</div><div class="section-text" id="result-partner"></div></div>
+        <div class="section"><div class="section-label">✦ 缘分线索</div><div class="fate-grid" id="fate-grid"></div></div>
       </div>
     </div>
-    <button class="btn-retry" onclick="restart()">鍐嶆祴涓€娆?/button>
-    <div class="share-hint">鎴浘淇濆瓨缁撴灉</div>
+    <button class="btn-retry" onclick="restart()">再测一次</button>
+    <div class="share-hint">截图保存结果</div>
   </div>
 
 </div>
@@ -130,8 +130,8 @@ var params = new URLSearchParams(window.location.search);
 var token = params.get('token');
 
 if (!token || VALID_TOKENS.indexOf(token) === -1) {
-  document.getElementById('denied-title').textContent = '閾炬帴鏃犳晥';
-  document.getElementById('denied-sub').textContent = '璇ユ祴璇曢摼鎺ヤ笉瀛樺湪銆傝鑱旂郴鍗栧鑾峰彇姝ｇ‘鐨勬祴璇曢摼鎺ャ€?;
+  document.getElementById('denied-title').textContent = '链接无效';
+  document.getElementById('denied-sub').textContent = '该测试链接不存在。请联系卖家获取正确的测试链接。';
   showPage('denied');
 } else {
   var usedKey = 'fp_used_' + token;
@@ -139,12 +139,12 @@ if (!token || VALID_TOKENS.indexOf(token) === -1) {
   var sessionId = token + '_' + Date.now();
 
   if (localStorage.getItem(usedKey) === '1') {
-    document.getElementById('denied-title').textContent = '閾炬帴宸蹭娇鐢?;
-    document.getElementById('denied-sub').textContent = '璇ユ祴璇曢摼鎺ュ凡琚娇鐢ㄨ繃锛屾瘡涓摼鎺ヤ粎闄愪竴浜烘祴璇曘€傝鑱旂郴鍗栧鑾峰彇鏂伴摼鎺ャ€?;
+    document.getElementById('denied-title').textContent = '链接已使用';
+    document.getElementById('denied-sub').textContent = '该测试链接已被使用过，每个链接仅限一人测试。请联系卖家获取新链接。';
     showPage('denied');
   } else if (localStorage.getItem(sessionKey) && localStorage.getItem(sessionKey) !== sessionId.substring(0,30)) {
-    document.getElementById('denied-title').textContent = '閾炬帴姝ｅ湪浣跨敤涓?;
-    document.getElementById('denied-sub').textContent = '璇ユ祴璇曢摼鎺ユ鍦ㄨ鍏朵粬浜轰娇鐢ㄣ€傝鑱旂郴鍗栧鑾峰彇鏂伴摼鎺ャ€?;
+    document.getElementById('denied-title').textContent = '链接正在使用中';
+    document.getElementById('denied-sub').textContent = '该测试链接正在被其他人使用。请联系卖家获取新链接。';
     showPage('denied');
   } else {
     localStorage.setItem(sessionKey, sessionId.substring(0,30));
@@ -153,16 +153,16 @@ if (!token || VALID_TOKENS.indexOf(token) === -1) {
 }
 
 // ======== DATA ========
-var TYPES={W:"娓╂煍鍨?,L:"鐞嗘€у瀷",Z:"鑷敱鍨?,C:"鎴愰暱鍨?,M:"鎱㈢儹鍨?};
-var TYPE_EMOJI={W:"馃尭",L:"馃挼",Z:"馃尪锔?,C:"馃尡",M:"馃惤"};
-var questions=[{id:1,title:"濡傛灉绐佺劧鑾峰緱3澶╁亣鏈燂紝浣犳渶鎯筹紵",options:[{text:"鍦ㄥ褰诲簳鏀炬澗",type:"W"},{text:"绾︽湅鍙嬪嚭鍘荤帺",type:"M"},{text:"鍘绘病鍘昏繃鐨勫湴鏂圭湅鐪?,type:"Z"}]},{id:2,title:"鍒汉绗竴娆¤鍒颁綘锛屾渶瀹规槗瑙夊緱浣犳槸锛?,options:[{text:"濂界浉澶?,type:"W"},{text:"鏈変富瑙?,type:"C"},{text:"鏈夌偣绁炵",type:"M"}]},{id:3,title:"濡傛灉鏀跺埌涓€浠芥剰澶栫ぜ鐗╋紝浣犳洿鍦ㄦ剰锛?,options:[{text:"瀵规柟鏄惁鐢ㄥ績",type:"W"},{text:"绀肩墿鏄惁瀹炵敤",type:"L"},{text:"绀肩墿鏄惁鐗瑰埆",type:"Z"}]},{id:4,title:"涓嬮潰鍝鐢熸椿鏇村惛寮曚綘锛?,options:[{text:"娓╅Θ绋冲畾",type:"W"},{text:"涓嶆柇鎴愰暱",type:"C"},{text:"鑷敱闅忔€?,type:"Z"}]},{id:5,title:"鏈嬪弸閬囧埌鍥伴毦鏃讹紝浣犻€氬父浼氾紵",options:[{text:"瀹夋叞闄即",type:"W"},{text:"甯繖鍒嗘瀽",type:"L"},{text:"鐩存帴琛屽姩瑙ｅ喅",type:"C"}]},{id:6,title:"浣犳洿鍠滄鍝鐢靛奖锛?,options:[{text:"娓╂儏娌绘剤",type:"W"},{text:"鎮枒鎺ㄧ悊",type:"L"},{text:"鍐掗櫓濂囧够",type:"Z"}]},{id:7,title:"浣犺涓烘劅鎯呮渶閲嶈鐨勬槸锛?,options:[{text:"淇′换",type:"W"},{text:"鐞嗚В",type:"M"},{text:"蹇冨姩",type:"Z"}]},{id:8,title:"濡傛灉鎼埌鏂板煄甯傦紝浣犱細鍏堬紵",options:[{text:"浜嗚В鍛ㄨ竟鐜",type:"L"},{text:"璁よ瘑鏂版湅鍙?,type:"M"},{text:"鎺㈢储濂界帺鐨勫湴鏂?,type:"Z"}]},{id:9,title:"浣犳洿娆ｈ祻浠€涔堟牱鐨勪汉锛?,options:[{text:"娓╂煍鍠勮壇",type:"W"},{text:"鎴愮啛鍙潬",type:"L"},{text:"鐙珛鑷俊",type:"C"}]},{id:10,title:"褰撹鍒掕鎵撲贡鏃讹紝浣犻€氬父锛?,options:[{text:"鏈夌偣澶辫惤",type:"M"},{text:"閲嶆柊瀹夋帓",type:"L"},{text:"椤哄叾鑷劧",type:"Z"}]},{id:11,title:"浣犳洿鍠滄鍝鑱婂ぉ鏂瑰紡锛?,options:[{text:"娣卞叆浜ゆ祦",type:"M"},{text:"杞绘澗闂茶亰",type:"W"},{text:"涓€璧峰仛浜?,type:"C"}]},{id:12,title:"濡傛灉鏈夋満浼氬涔犳柊鎶€鑳斤紝浣犱細閫夛紵",options:[{text:"缁樼敾闊充箰",type:"M"},{text:"鎶曡祫鍟嗕笟",type:"C"},{text:"鎴峰鏃呰",type:"Z"}]},{id:13,title:"浠ヤ笅鍝彞璇濇洿绗﹀悎浣狅紵",options:[{text:"骞冲钩娣℃贰鎵嶆槸鐪?,type:"W"},{text:"鍔姏鏀瑰彉鏈潵",type:"C"},{text:"浜虹敓搴旇澶ц儐灏濊瘯",type:"Z"}]},{id:14,title:"闈㈠閲嶈閫夋嫨鏃讹紝浣犳洿鐩镐俊锛?,options:[{text:"鍐呭績鎰熷彈",type:"M"},{text:"閫昏緫鍒嗘瀽",type:"L"},{text:"瀹為檯缁忛獙",type:"C"}]},{id:15,title:"濡傛灉鏈潵鍙︿竴鍗婂嚭鐜帮紝浣犳渶甯屾湜Ta锛?,options:[{text:"鐞嗚В浣?,type:"M"},{text:"鏀寔浣?,type:"C"},{text:"闄綘鎺㈢储涓栫晫",type:"Z"}]}];
-var personalityTemplates={W:"浣犳槸涓€涓噸鎰熸儏鐨勪汉銆備綘寰堝湪鎰忎汉涓庝汉涔嬮棿鐨勭湡璇氾紝涔熸効鎰忎负閲嶈鐨勪汉浠樺嚭鏃堕棿鍜岀簿鍔涖€傜浉姣旇桨杞扮儓鐑堢殑鏁呬簨锛屼綘鏇村悜寰€缁嗘按闀挎祦鐨勯櫔浼淬€?,L:"浣犱範鎯厛鎬濊€冨啀琛屽姩銆傞潰瀵归棶棰樻椂锛屼綘鏇存効鎰忓垎鏋愬師鍥狅紝鑰屼笉鏄鎯呯华宸﹀彸銆傚緢澶氫汉瑙夊緱浣犲彲闈狅紝鍥犱负浣犳€昏兘淇濇寔鍐烽潤銆?,Z:"浣犱笉鍠滄琚浐瀹氳鍒欐潫缂氥€傚浜庢湭鐭ョ殑浜嬬墿锛屼綘鎬绘槸淇濇寔濂藉蹇冦€備綘鍠滄鎸夌収鑷繁鐨勮妭濂忕敓娲汇€?,C:"浣犲鏈潵鏈夎嚜宸辩殑鐩爣銆備綘鎰挎剰瀛︿範锛屼篃鎰挎剰涓嶆柇绐佺牬鑷繁銆傛瘮璧峰畨浜庣幇鐘讹紝浣犳洿浜彈杩涙甯︽潵鐨勬弧瓒虫劅銆?,M:"浣犱笉浼氳交鏄撳悜鍒汉鏁炲紑蹇冩墘銆備絾涓€鏃﹀缓绔嬩俊浠伙紝浣犱細灞曠幇鍑烘渶鐪熻瘹鐨勪竴闈€備綘鐝嶈姣忎竴娈垫潵涔嬩笉鏄撶殑鍏崇郴銆?};
-var partnerTemplates={W:"浣犵殑鏈潵瀵硅薄鏄竴涓俯鏌斾笖鏈夎€愬績鐨勪汉銆俆a鎳傚緱鍊惧惉锛屼篃鎰挎剰鐞嗚В浣犵殑鎯虫硶銆?,L:"浣犵殑鏈潵瀵硅薄鎴愮啛鍙潬銆俆a鍋氫簨鏈夎鍒掞紝璐ｄ换鎰熷緢寮猴紝鑳藉缁欎綘瀹夊叏鎰熴€?,Z:"浣犵殑鏈潵瀵硅薄闃冲厜寮€鏈椼€俆a鍠滄鎺㈢储涓栫晫锛屾€昏兘甯︾粰浣犳柊鐨勬儕鍠溿€?,C:"浣犵殑鏈潵瀵硅薄鐙珛鑷俊銆俆a鏈夎嚜宸辩殑鐩爣鍜屼簨涓氾紝浣犱滑浼氫簰鐩告璧忋€?,M:"浣犵殑鏈潵瀵硅薄閲嶈绮剧浜ゆ祦銆俆a鏇村湪鎰忓郊姝ゆ槸鍚︾湡姝ｇ悊瑙ｅ鏂广€?};
-var meetWays=["涓€娆″伓鐒剁殑鐩搁亣","鏈嬪弸浠嬬粛","宸ヤ綔鎴栧涔犲満鏅?,"鍏磋叮鐖卞ソ鍦堝瓙","缃戠粶绀句氦骞冲彴"];
-var ageGaps=["Ta姣斾綘澶?-5宀?,"Ta姣斾綘澶?宀佷互涓?,"浣犱滑鍚岄緞","Ta姣斾綘灏?-3宀?,"骞撮緞宸秴杩?宀?];
-var jobs=["浜掕仈缃戠鎶€","鏁欒偛鍖荤枟","閲戣瀺绠＄悊","璁捐鑹烘湳","鑷敱鑱屼笟"];
-var loveModes=["缁嗘按闀挎祦","涓€瑙佸€惧績","鍏卞悓鎴愰暱","娆㈠枩鍐ゅ","鍛借繍瀹夋帓"];
-var fateEmojis={meet:["鉁?,"馃幃","馃寛","馃泦","馃摣"],job:["馃拠","馃彏","馃摮","馃幑","鉁堬笍"],age:["馃憱馃徎","馃憱馃従","馃","馃憱馃徏","馃憜馃徎"],mode:["馃尃","馃帄","馃尅","馃泤","馃泚"]};
+var TYPES={W:"温柔型",L:"理性型",Z:"自由型",C:"成长型",M:"慢热型"};
+var TYPE_EMOJI={W:"🌸",L:"💵",Z:"🌶️",C:"🌱",M:"🐽"};
+var questions=[{id:1,title:"如果突然获得3天假期，你最想？",options:[{text:"在家彻底放松",type:"W"},{text:"约朋友出去玩",type:"M"},{text:"去没去过的地方看看",type:"Z"}]},{id:2,title:"别人第一次见到你，最容易觉得你是？",options:[{text:"好相处",type:"W"},{text:"有主见",type:"C"},{text:"有点神秘",type:"M"}]},{id:3,title:"如果收到一份意外礼物，你更在意？",options:[{text:"对方是否用心",type:"W"},{text:"礼物是否实用",type:"L"},{text:"礼物是否特别",type:"Z"}]},{id:4,title:"下面哪种生活更吸引你？",options:[{text:"温馨稳定",type:"W"},{text:"不断成长",type:"C"},{text:"自由随性",type:"Z"}]},{id:5,title:"朋友遇到困难时，你通常会？",options:[{text:"安慰陪伴",type:"W"},{text:"帮忙分析",type:"L"},{text:"直接行动解决",type:"C"}]},{id:6,title:"你更喜欢哪种电影？",options:[{text:"温情治愈",type:"W"},{text:"悬疑推理",type:"L"},{text:"冒险奇幻",type:"Z"}]},{id:7,title:"你认为感情最重要的是？",options:[{text:"信任",type:"W"},{text:"理解",type:"M"},{text:"心动",type:"Z"}]},{id:8,title:"如果搬到新城市，你会先？",options:[{text:"了解周边环境",type:"L"},{text:"认识新朋友",type:"M"},{text:"探索好玩的地方",type:"Z"}]},{id:9,title:"你更欣赏什么样的人？",options:[{text:"温柔善良",type:"W"},{text:"成熟可靠",type:"L"},{text:"独立自信",type:"C"}]},{id:10,title:"当计划被打乱时，你通常？",options:[{text:"有点失落",type:"M"},{text:"重新安排",type:"L"},{text:"顺其自然",type:"Z"}]},{id:11,title:"你更喜欢哪种聊天方式？",options:[{text:"深入交流",type:"M"},{text:"轻松闲聊",type:"W"},{text:"一起做事",type:"C"}]},{id:12,title:"如果有机会学习新技能，你会选？",options:[{text:"绘画音乐",type:"M"},{text:"投资商业",type:"C"},{text:"户外旅行",type:"Z"}]},{id:13,title:"以下哪句话更符合你？",options:[{text:"平平淡淡才是真",type:"W"},{text:"努力改变未来",type:"C"},{text:"人生应该大胆尝试",type:"Z"}]},{id:14,title:"面对重要选择时，你更相信？",options:[{text:"内心感受",type:"M"},{text:"逻辑分析",type:"L"},{text:"实际经验",type:"C"}]},{id:15,title:"如果未来另一半出现，你最希望Ta？",options:[{text:"理解你",type:"M"},{text:"支持你",type:"C"},{text:"陪你探索世界",type:"Z"}]}];
+var personalityTemplates={W:"你是一个重感情的人。你很在意人与人之间的真诚，也愿意为重要的人付出时间和精力。相比轰轰烈烈的故事，你更向往细水长流的陪伴。",L:"你习惯先思考再行动。面对问题时，你更愿意分析原因，而不是被情绪左右。很多人觉得你可靠，因为你总能保持冷静。",Z:"你不喜欢被固定规则束缚。对于未知的事物，你总是保持好奇心。你喜欢按照自己的节奏生活。",C:"你对未来有自己的目标。你愿意学习，也愿意不断突破自己。比起安于现状，你更享受进步带来的满足感。",M:"你不会轻易向别人敞开心扉。但一旦建立信任，你会展现出最真诚的一面。你珍视每一段来之不易的关系。"};
+var partnerTemplates={W:"你的未来对象是一个温柔且有耐心的人。Ta懂得倾听，也愿意理解你的想法。",L:"你的未来对象成熟可靠。Ta做事有规划，责任感很强，能够给你安全感。",Z:"你的未来对象阳光开朗。Ta喜欢探索世界，总能带给你新的惊喜。",C:"你的未来对象独立自信。Ta有自己的目标和事业，你们会互相欣赏。",M:"你的未来对象重视精神交流。Ta更在意彼此是否真正理解对方。"};
+var meetWays=["一次偶然的相遇","朋友介绍","工作或学习场景","兴趣爱好圈子","网络社交平台"];
+var ageGaps=["Ta比你大3-5岁","Ta比你大5岁以上","你们同龄","Ta比你小1-3岁","年龄差超过5岁"];
+var jobs=["互联网科技","教育医疗","金融管理","设计艺术","自由职业"];
+var loveModes=["细水长流","一见倾心","共同成长","欢喜冤家","命运安排"];
+var fateEmojis={meet:["✨","🎮","🌈","🛆","📫"],job:["💇","🏞","📳","🎹","✈️"],age:["👖🏻","👖🏾","🤌","👖🏼","👆🏻"],mode:["🌠","🎊","🌡","🛅","🛁"]};
 
 var score={},currentIndex=0,quizTimer=null,resultData=null;
 
@@ -170,11 +170,11 @@ function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.c
 
 function startQuiz(){score={W:0,L:0,Z:0,C:0,M:0};currentIndex=0;showPage('quiz');renderQuestion()}
 
-function renderQuestion(){var q=questions[currentIndex];document.getElementById('quiz-current').textContent=currentIndex+1;document.getElementById('progress-fill').style.width=(currentIndex/questions.length*100)+'%';document.getElementById('question-num').textContent='绗?'+q.id+' 棰?;document.getElementById('question-title').textContent=q.title;document.getElementById('options-container').innerHTML=q.options.map(function(opt,idx){return '<div class="option" data-type="'+opt.type+'" data-idx="'+idx+'" onclick="selectOption(this)">'+opt.text+'</div>'}).join('')}
+function renderQuestion(){var q=questions[currentIndex];document.getElementById('quiz-current').textContent=currentIndex+1;document.getElementById('progress-fill').style.width=(currentIndex/questions.length*100)+'%';document.getElementById('question-num').textContent='第 '+q.id+' 题';document.getElementById('question-title').textContent=q.title;document.getElementById('options-container').innerHTML=q.options.map(function(opt,idx){return '<div class="option" data-type="'+opt.type+'" data-idx="'+idx+'" onclick="selectOption(this)">'+opt.text+'</div>'}).join('')}
 
 function selectOption(el){if(el.parentElement.querySelector('.selected'))return;score[el.dataset.type]+=1;var all=el.parentElement.querySelectorAll('.option');all.forEach(function(o){o.classList.add('faded')});el.classList.add('selected');clearTimeout(quizTimer);quizTimer=setTimeout(function(){currentIndex++;if(currentIndex<questions.length)renderQuestion();else showResult()},350)}
 
-function showResult(){showPage('loading');if(token){localStorage.setItem('fp_used_'+token,'1');localStorage.removeItem('fp_sess_'+token)}setTimeout(function(){var sorted=Object.entries(score).sort(function(a,b){return b[1]-a[1]});var mainType=sorted[0][0],secondType=sorted[1][0];var pick=function(arr){return arr[Math.floor(Math.random()*arr.length)]};var mw=pick(meetWays),jb=pick(jobs),ag=pick(ageGaps),lm=pick(loveModes);resultData={typeName:TYPES[mainType],typeEmoji:TYPE_EMOJI[mainType],personalityText:personalityTemplates[mainType],partnerText:partnerTemplates[secondType],fateItems:[{emoji:fateEmojis.meet[meetWays.indexOf(mw)],label:'鐩搁亣鏂瑰紡',value:mw},{emoji:fateEmojis.job[jobs.indexOf(jb)],label:'鑱屼笟鏂瑰悜',value:jb},{emoji:fateEmojis.age[ageGaps.indexOf(ag)],label:'骞撮緞宸?,value:ag},{emoji:fateEmojis.mode[loveModes.indexOf(lm)],label:'鎭嬬埍妯″紡',value:lm}]};document.getElementById('result-badge').textContent=resultData.typeEmoji+' '+resultData.typeName;document.getElementById('result-type-name').textContent=resultData.typeName;document.getElementById('result-personality').textContent=resultData.personalityText;document.getElementById('result-partner').textContent=resultData.partnerText;document.getElementById('fate-grid').innerHTML=resultData.fateItems.map(function(i){return '<div class="fate-item"><div class="fate-emoji">'+i.emoji+'</div><div class="fate-label">'+i.label+'</div><div class="fate-value">'+i.value+'</div></div>'}).join('');showPage('result')},1800)}
+function showResult(){showPage('loading');if(token){localStorage.setItem('fp_used_'+token,'1');localStorage.removeItem('fp_sess_'+token)}setTimeout(function(){var sorted=Object.entries(score).sort(function(a,b){return b[1]-a[1]});var mainType=sorted[0][0],secondType=sorted[1][0];var pick=function(arr){return arr[Math.floor(Math.random()*arr.length)]};var mw=pick(meetWays),jb=pick(jobs),ag=pick(ageGaps),lm=pick(loveModes);resultData={typeName:TYPES[mainType],typeEmoji:TYPE_EMOJI[mainType],personalityText:personalityTemplates[mainType],partnerText:partnerTemplates[secondType],fateItems:[{emoji:fateEmojis.meet[meetWays.indexOf(mw)],label:'相遇方式',value:mw},{emoji:fateEmojis.job[jobs.indexOf(jb)],label:'职业方向',value:jb},{emoji:fateEmojis.age[ageGaps.indexOf(ag)],label:'年龄差',value:ag},{emoji:fateEmojis.mode[loveModes.indexOf(lm)],label:'恋爱模式',value:lm}]};document.getElementById('result-badge').textContent=resultData.typeEmoji+' '+resultData.typeName;document.getElementById('result-type-name').textContent=resultData.typeName;document.getElementById('result-personality').textContent=resultData.personalityText;document.getElementById('result-partner').textContent=resultData.partnerText;document.getElementById('fate-grid').innerHTML=resultData.fateItems.map(function(i){return '<div class="fate-item"><div class="fate-emoji">'+i.emoji+'</div><div class="fate-label">'+i.label+'</div><div class="fate-value">'+i.value+'</div></div>'}).join('');showPage('result')},1800)}
 
 function restart(){showPage('start')}
 </script>
