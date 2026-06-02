@@ -1,6 +1,5 @@
-import { kv } from '@vercel/kv';
+import { getStore } from '@netlify/blobs';
 
-// Pre-generated tokens — valid on first use
 const ALLOWLIST = new Set([
   "yczjgnpt","un3utr4y","gr4y5pzr","apedzaxf","2m6kwmvu","ycn5j4hv","ftm3k3bk","mjj3gj4t",
   "zw3gvsb6","6h92a5ff","ft8fy669","jv8mc3mp","h5ewaaax","rq6b4kjs","ccwymw54","z479ty4c",
@@ -11,8 +10,6 @@ const ALLOWLIST = new Set([
   "49zfuabj","m5yngsdr"
 ]);
 
-export const config = { runtime: 'edge' };
-
 export default async function handler(req) {
   const url = new URL(req.url);
   const token = url.searchParams.get('token');
@@ -21,17 +18,16 @@ export default async function handler(req) {
     return Response.json({ valid: false, reason: 'missing_token' }, { status: 400 });
   }
 
-  // Only serve tokens in the allowlist
   if (!ALLOWLIST.has(token)) {
     return Response.json({ valid: false, reason: 'invalid_token' }, { status: 403 });
   }
 
   try {
-    const status = await kv.get(`token:${token}`);
+    const store = getStore('tokens');
+    const status = await store.get(`token:${token}`);
 
-    // First time: auto-register as unused
     if (!status) {
-      await kv.set(`token:${token}`, 'unused');
+      await store.set(`token:${token}`, 'unused');
     }
 
     const currentStatus = status || 'unused';
@@ -42,14 +38,13 @@ export default async function handler(req) {
 
     if (currentStatus === 'unused') {
       const sessionId = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-      await kv.set(`token:${token}`, 'locked');
-      await kv.set(`lock:${token}`, sessionId);
-      await kv.expire(`lock:${token}`, 3600);
+      await store.set(`token:${token}`, 'locked');
+      await store.set(`lock:${token}`, sessionId);
       return Response.json({ valid: true, session: sessionId });
     }
 
     if (currentStatus === 'locked') {
-      const lockedSession = await kv.get(`lock:${token}`);
+      const lockedSession = await store.get(`lock:${token}`);
       const reqSession = url.searchParams.get('session');
       if (reqSession && reqSession === lockedSession) {
         return Response.json({ valid: true, session: lockedSession });
@@ -62,3 +57,5 @@ export default async function handler(req) {
     return Response.json({ valid: false, reason: 'error', detail: e.message }, { status: 500 });
   }
 }
+
+export const config = { path: '/api/validate' };
