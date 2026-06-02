@@ -5,53 +5,145 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Token 管理 — 未来对象测试</title>
 <style>
-  body{font-family:-apple-system,sans-serif;max-width:600px;margin:40px auto;padding:0 20px;background:#fdf6f0;color:#5c3a3a}
-  h1{font-size:20px;margin-bottom:8px}
-  .hint{font-size:13px;color:#8c7a7a;margin-bottom:20px}
-  .token-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0e0db;font-size:14px;font-family:monospace}
-  .token-row .num{color:#c0afaf;min-width:28px}
-  .token-row .code{flex:1}
-  .token-row button{padding:4px 12px;border:1px solid #e8786e;border-radius:4px;background:#fff;color:#e8786e;cursor:pointer;font-size:12px}
+  body{font-family:-apple-system,sans-serif;max-width:640px;margin:40px auto;padding:0 20px;background:#fdf6f0;color:#5c3a3a}
+  h1{font-size:20px;margin-bottom:4px}
+  .stats{display:flex;gap:14px;margin-bottom:16px}
+  .stat{padding:8px 14px;background:#fff;border-radius:8px;font-size:13px;box-shadow:0 1px 4px rgba(120,60,60,.06)}
+  .stat .num{font-weight:700;font-size:18px}
+  .stat .num.low{color:#e8786e}
+  .hint{font-size:12px;color:#8c7a7a;margin-bottom:16px}
+  .token-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0e0db;font-size:13px;font-family:monospace}
+  .token-row .num{color:#c0afaf;min-width:26px;font-size:11px}
+  .token-row .code{flex:1;font-size:13px}
+  .token-row .note{width:70px;padding:3px 6px;border:1px solid #e0d0cc;border-radius:4px;font-size:11px;background:#fff;color:#5c3a3a;font-family:inherit}
+  .token-row button{padding:4px 10px;border:1px solid #e8786e;border-radius:4px;background:#fff;color:#e8786e;cursor:pointer;font-size:11px;white-space:nowrap}
   .token-row button:hover{background:#fef5f4}
-  .token-row button.used{opacity:.4;pointer-events:none;text-decoration:line-through}
+  .token-row.used .code{opacity:.5;text-decoration:line-through}
+  .token-row.used button{opacity:.4;pointer-events:none}
+  .token-row.used .note{opacity:.4}
   .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#5c3a3a;color:#fff;padding:10px 24px;border-radius:8px;font-size:14px;z-index:99;display:none}
-  .btn-reset{margin-top:24px;padding:8px 20px;border:1px solid #ccc;border-radius:6px;background:#fff;color:#8c7a7a;cursor:pointer;font-size:13px}
+  .btn-bar{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+  .btn{font-size:13px;padding:8px 16px;border-radius:6px;border:1px solid #ccc;background:#fff;color:#5c3a3a;cursor:pointer}
+  .btn.primary{background:linear-gradient(135deg,#e8786e,#f09888);color:#fff;border:none}
+  .btn:hover{opacity:.85}
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;justify-content:center;align-items:center}
+  .modal.show{display:flex}
+  .modal-box{background:#fff;border-radius:12px;padding:24px;max-width:400px;width:90%;max-height:80vh;overflow-y:auto}
+  .modal-box h2{font-size:17px;margin-bottom:12px}
+  .modal-box textarea{width:100%;height:200px;font-family:monospace;font-size:11px;padding:8px;border:1px solid #e0d0cc;border-radius:6px;resize:vertical}
+  .modal-box .btn{margin-top:10px;width:100%}
 </style>
 </head>
 <body>
-<h1>🔭 未来对象测试 — Token 列表</h1>
-<p class="hint">共 50 个 token。「复制链接」发给付款用户，每个链接仅限一人使用。</p>
+<h1>🔭 未来对象测试</h1>
+<div class="stats">
+  <div class="stat">剩余 <span class="num" id="stat-remain">-</span></div>
+  <div class="stat">已用 <span class="num" id="stat-used">-</span></div>
+  <div class="stat">总计 <span class="num">50</span></div>
+</div>
+<p class="hint">「复制链接」发给付款买家，一个链接一人用。用完后填买家昵称便于对账。</p>
 <div id="token-list"></div>
-<button class="btn-reset" onclick="resetAll()">清除本机使用记录</button>
-<div class="toast" id="toast">已复制！</div>
+<div class="btn-bar">
+  <button class="btn primary" onclick="restock()">+ 生成 50 个补货令牌</button>
+  <button class="btn" onclick="exportUsed()">导出已用记录</button>
+  <button class="btn" onclick="resetAll()">清除本机记录</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- Restock modal -->
+<div class="modal" id="restock-modal">
+  <div class="modal-box">
+    <h2>新令牌已生成</h2>
+    <p style="font-size:12px;color:#8c7a7a;margin-bottom:8px">以下50个新token。点击「复制」后发给Codex完成补货。</p>
+    <textarea id="restock-text" readonly></textarea>
+    <button class="btn primary" onclick="copyRestock()">复制令牌列表</button>
+    <button class="btn" onclick="closeRestock()">关闭</button>
+  </div>
+</div>
 
 <script>
 var TOKENS=["yczjgnpt","un3utr4y","gr4y5pzr","apedzaxf","2m6kwmvu","ycn5j4hv","ftm3k3bk","mjj3gj4t","zw3gvsb6","6h92a5ff","ft8fy669","jv8mc3mp","h5ewaaax","rq6b4kjs","ccwymw54","z479ty4c","7useztfe","sjzh94f8","krj9fwbv","ak7gcbe3","v3dh3d2u","7rgc7v56","x9xbq47j","s6epw8br","d7wfz7fg","zzcyq9yp","ratdndn3","65z68n78","p28a8xfz","3rmz2h5t","g27wq8ca","u5k5gjhn","3ejyaxq4","44k73wbw","9gygqjtr","y8qcmktt","h87v8fsu","kc3wweh7","4x6ava7s","w49cgmrs","j3y4zqy4","ye7ms75t","ytjyqt8g","bp8efpm8","wkm5rpgp","9bkqcuaz","8rnyc3c2","4r2krtwj","49zfuabj","m5yngsdr"];
 var BASE=window.location.origin+'/future-partner-test';
 var list=document.getElementById('token-list');
 
-TOKENS.forEach(function(t,i){
-  var used=localStorage.getItem('fp_used_'+t)==='1';
-  var row=document.createElement('div');
-  row.className='token-row';
-  row.innerHTML='<span class="num">'+(i+1)+'</span><span class="code">'+t+(used?' 🔒':'')+'</span><button class="'+(used?'used':'')+'" onclick="copyLink(\''+t+'\')">'+(used?'已使用':'复制链接')+'</button>';
-  list.appendChild(row)
-});
+function render() {
+  var used=0;
+  list.innerHTML='';
+  TOKENS.forEach(function(t,i){
+    var isUsed=localStorage.getItem('fp_used_'+t)==='1';
+    var note=localStorage.getItem('fp_note_'+t)||'';
+    if(isUsed) used++;
+    var row=document.createElement('div');
+    row.className='token-row'+(isUsed?' used':'');
+    row.innerHTML='<span class="num">'+(i+1)+'</span><span class="code">'+t+'</span><input class="note" placeholder="买家昵称" value="'+note+'" data-token="'+t+'"><button onclick="copyLink(\''+t+'\')">'+(isUsed?'已使用':'复制链接')+'</button>';
+    list.appendChild(row)
+  });
+
+  // Bind note inputs
+  list.querySelectorAll('.note').forEach(function(inp){
+    inp.addEventListener('change',function(){
+      localStorage.setItem('fp_note_'+this.dataset.token,this.value)
+    })
+  });
+
+  var remain=TOKENS.length-used;
+  document.getElementById('stat-remain').textContent=remain;
+  document.getElementById('stat-remain').className='num'+(remain<10?' low':'');
+  document.getElementById('stat-used').textContent=used;
+}
+render();
 
 function copyLink(token){
   var url=BASE+'/?token='+token;
   navigator.clipboard.writeText(url).then(function(){
-    var toast=document.getElementById('toast');
-    toast.style.display='block';
-    setTimeout(function(){toast.style.display='none'},1500)
+    toast('已复制！')
   })
+}
+
+function toast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';
+  setTimeout(function(){t.style.display='none'},1500)
+}
+
+function exportUsed(){
+  var used=[];
+  TOKENS.forEach(function(t){
+    if(localStorage.getItem('fp_used_'+t)==='1'){
+      used.push({token:t,note:localStorage.getItem('fp_note_'+t)||''})
+    }
+  });
+  if(used.length===0){toast('没有已用记录');return}
+  var csv='token,买家昵称\n'+used.map(function(u){return u.token+','+u.note}).join('\n');
+  navigator.clipboard.writeText(csv).then(function(){toast('已复制'+used.length+'条记录！')})
 }
 
 function resetAll(){
   if(confirm('清除所有token使用记录？（仅影响本浏览器）')){
-    TOKENS.forEach(function(t){localStorage.removeItem('fp_used_'+t);localStorage.removeItem('fp_sess_'+t)});
-    location.reload()
+    TOKENS.forEach(function(t){localStorage.removeItem('fp_used_'+t);localStorage.removeItem('fp_sess_'+t);localStorage.removeItem('fp_note_'+t)});
+    render();toast('已清除')
   }
+}
+
+function restock(){
+  var chars='abcdefghjkmnpqrstuvwxyz23456789';
+  var newTokens=[];
+  for(var i=0;i<50;i++){
+    var t='';
+    for(var j=0;j<8;j++) t+=chars[Math.floor(Math.random()*chars.length)];
+    newTokens.push('"'+t+'"')
+  }
+  document.getElementById('restock-text').value=newTokens.join(',\n');
+  document.getElementById('restock-modal').classList.add('show')
+}
+
+function copyRestock(){
+  var text=document.getElementById('restock-text').value;
+  navigator.clipboard.writeText(text).then(function(){toast('已复制！发送给Codex完成补货')})
+}
+
+function closeRestock(){
+  document.getElementById('restock-modal').classList.remove('show')
 }
 </script>
 </body>
