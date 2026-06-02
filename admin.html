@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Token 绠＄悊 鈥?鏈潵瀵硅薄娴嬭瘯</title>
+<style>
+  body{font-family:-apple-system,sans-serif;max-width:600px;margin:40px auto;padding:0 20px;background:#fdf6f0;color:#5c3a3a}
+  h1{font-size:20px;margin-bottom:8px}
+  .hint{font-size:13px;color:#8c7a7a;margin-bottom:20px}
+  .token-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0e0db;font-size:14px;font-family:monospace}
+  .token-row .num{color:#c0afaf;min-width:28px}
+  .token-row .code{flex:1}
+  .token-row button{padding:4px 12px;border:1px solid #e8786e;border-radius:4px;background:#fff;color:#e8786e;cursor:pointer;font-size:12px}
+  .token-row button:hover{background:#fef5f4}
+  .token-row button.used{opacity:.4;pointer-events:none;text-decoration:line-through}
+  .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#5c3a3a;color:#fff;padding:10px 24px;border-radius:8px;font-size:14px;z-index:99;display:none}
+  .btn-reset{margin-top:24px;padding:8px 20px;border:1px solid #ccc;border-radius:6px;background:#fff;color:#8c7a7a;cursor:pointer;font-size:13px}
+</style>
+</head>
+<body>
+<h1>馃敪 鏈潵瀵硅薄娴嬭瘯 鈥?Token 鍒楄〃</h1>
+<p class="hint">鍏?50 涓?token銆傘€屽鍒堕摼鎺ャ€嶅彂缁欎粯娆剧敤鎴凤紝姣忎釜閾炬帴浠呴檺涓€浜轰娇鐢ㄣ€?/p>
+<div id="token-list"></div>
+<button class="btn-reset" onclick="resetAll()">娓呴櫎鏈満浣跨敤璁板綍</button>
+<div class="toast" id="toast">宸插鍒讹紒</div>
+
+<script>
+var TOKENS=["yczjgnpt","un3utr4y","gr4y5pzr","apedzaxf","2m6kwmvu","ycn5j4hv","ftm3k3bk","mjj3gj4t","zw3gvsb6","6h92a5ff","ft8fy669","jv8mc3mp","h5ewaaax","rq6b4kjs","ccwymw54","z479ty4c","7useztfe","sjzh94f8","krj9fwbv","ak7gcbe3","v3dh3d2u","7rgc7v56","x9xbq47j","s6epw8br","d7wfz7fg","zzcyq9yp","ratdndn3","65z68n78","p28a8xfz","3rmz2h5t","g27wq8ca","u5k5gjhn","3ejyaxq4","44k73wbw","9gygqjtr","y8qcmktt","h87v8fsu","kc3wweh7","4x6ava7s","w49cgmrs","j3y4zqy4","ye7ms75t","ytjyqt8g","bp8efpm8","wkm5rpgp","9bkqcuaz","8rnyc3c2","4r2krtwj","49zfuabj","m5yngsdr"];
+var BASE=window.location.origin;
+var list=document.getElementById('token-list');
+
+TOKENS.forEach(function(t,i){
+  var used=localStorage.getItem('fp_used_'+t)==='1';
+  var row=document.createElement('div');
+  row.className='token-row';
+  row.innerHTML='<span class="num">'+(i+1)+'</span><span class="code">'+t+(used?' 馃敀':'')+'</span><button class="'+(used?'used':'')+'" onclick="copyLink(\''+t+'\')">'+(used?'宸蹭娇鐢?:'澶嶅埗閾炬帴')+'</button>';
+  list.appendChild(row)
+});
+
+function copyLink(token){
+  var url=BASE+'/?token='+token;
+  navigator.clipboard.writeText(url).then(function(){
+    var toast=document.getElementById('toast');
+    toast.style.display='block';
+    setTimeout(function(){toast.style.display='none'},1500)
+  })
+}
+
+function resetAll(){
+  if(confirm('娓呴櫎鎵€鏈塼oken浣跨敤璁板綍锛燂紙浠呭奖鍝嶆湰娴忚鍣級')){
+    TOKENS.forEach(function(t){localStorage.removeItem('fp_used_'+t);localStorage.removeItem('fp_sess_'+t)});
+    location.reload()
+  }
+}
+</script>
+</body>
+</html>
