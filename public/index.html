@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>未来对象测试</title>
+<meta name="description" content="15道题，看看你的未来对象是什么类型">
+<style>
+:root {
+  --bg: #fdf6f0;
+  --card-bg: #ffffff;
+  --text-primary: #5c3a3a;
+  --text-secondary: #8c7a7a;
+  --text-muted: #c0afaf;
+  --accent: #e8786e;
+  --accent-light: #f09888;
+  --accent-bg: #fef5f4;
+  --accent-bg2: #fef0ee;
+  --accent-bg3: #fdf7f5;
+  --border-light: #f3e8e5;
+  --progress-bg: #f0e0db;
+  --shadow: 0 2px 14px rgba(120, 60, 60, 0.08);
+  --shadow-btn: 0 3px 16px rgba(232, 120, 110, 0.35);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.container {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100vh;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Gate / Error */
+.page { display: none; flex-direction: column; align-items: center; width: 100%; }
+.page.active { display: flex; }
+.gate-icon { font-size: 64px; margin-top: 100px; margin-bottom: 16px; }
+.gate-title { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+.gate-sub { font-size: 14px; color: var(--text-secondary); text-align: center; line-height: 1.7; }
+
+/* Start */
+.hero-icon { font-size: 64px; margin-top: 60px; margin-bottom: 12px; animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.hero-title { font-size: 26px; font-weight: 700; letter-spacing: 2px; color: var(--text-primary); margin-bottom: 8px; }
+.hero-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 48px; text-align: center; line-height: 1.7; }
+.btn-start {
+  width: 220px; height: 48px; border: none; border-radius: 24px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff; font-size: 17px; font-weight: 600; letter-spacing: 2px;
+  cursor: pointer; box-shadow: var(--shadow-btn); transition: transform 0.15s;
+}
+.btn-start:hover { transform: translateY(-1px); }
+.btn-start:active { transform: scale(0.97); }
+
+/* Quiz */
+.quiz-header { width: 100%; margin-bottom: 8px; }
+.quiz-counter { font-size: 13px; color: var(--text-secondary); text-align: center; margin-bottom: 12px; letter-spacing: 1px; }
+.quiz-counter .accent { color: var(--accent); font-weight: 600; }
+.progress-bar { width: 100%; height: 4px; background: var(--progress-bg); border-radius: 2px; overflow: hidden; margin-bottom: 28px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-light)); border-radius: 2px; transition: width 0.35s; }
+.question-card { width: 100%; background: var(--card-bg); border-radius: 16px; padding: 28px 24px 24px; box-shadow: var(--shadow); text-align: center; }
+.question-num { display: inline-block; background: var(--accent-bg2); color: var(--accent); font-size: 12px; font-weight: 600; padding: 3px 14px; border-radius: 10px; margin-bottom: 16px; letter-spacing: 1px; }
+.question-title { font-size: 18px; font-weight: 600; line-height: 1.5; color: #4a3232; margin-bottom: 24px; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+  width: 100%; padding: 14px 20px; border: 2px solid var(--border-light); border-radius: 12px;
+  background: #fffdfc; font-size: 15px; color: var(--text-primary); text-align: center;
+  cursor: pointer; transition: all 0.2s;
+}
+.option:hover { border-color: #e0c8c4; }
+.option.selected { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); font-weight: 500; }
+.option.faded { opacity: 0.3; }
+.option.faded.selected { opacity: 1; }
+.share-hint { margin-top: 20px; font-size: 12px; color: var(--text-muted); text-align: center; letter-spacing: 1px; }
+
+/* Loading */
+.loading-spinner { width: 48px; height: 48px; border: 4px solid var(--progress-bg); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-top: 100px; margin-bottom: 24px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 15px; color: var(--text-secondary); letter-spacing: 1px; }
+
+/* Result */
+.result-card { width: 100%; background: var(--card-bg); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; }
+.result-header { background: linear-gradient(135deg, var(--accent), var(--accent-light)); padding: 36px 24px 32px; text-align: center; color: #fff; }
+.result-type-badge { display: inline-block; background: rgba(255,255,255,0.25); padding: 6px 22px; border-radius: 14px; font-size: 14px; letter-spacing: 2px; margin-bottom: 12px; }
+.result-main-title { font-size: 34px; font-weight: 700; letter-spacing: 3px; }
+.result-body { padding: 28px 24px; }
+.section { margin-bottom: 24px; }
+.section:last-child { margin-bottom: 0; }
+.section-label { font-size: 12px; color: var(--accent); font-weight: 600; letter-spacing: 2px; margin-bottom: 8px; }
+.section-text { font-size: 15px; line-height: 1.8; color: var(--text-primary); }
+.fate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fate-item { background: var(--accent-bg3); border-radius: 10px; padding: 14px 12px; text-align: center; }
+.fate-emoji { font-size: 22px; margin-bottom: 4px; }
+.fate-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 2px; }
+.fate-value { font-size: 14px; color: var(--text-primary); font-weight: 500; }
+.btn-retry {
+  width: 100%; margin-top: 20px; padding: 14px; border: 2px solid var(--accent); border-radius: 24px;
+  background: #fff; color: var(--accent); font-size: 16px; font-weight: 600; letter-spacing: 2px;
+  cursor: pointer; transition: background 0.15s;
+}
+.btn-retry:hover { background: var(--accent-bg); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- GATE: checking -->
+  <div class="page active" id="page-checking">
+    <div class="loading-spinner" style="margin-top:160px"></div>
+    <div class="loading-text">验证访问权限...</div>
+  </div>
+
+  <!-- GATE: invalid / used / in-use -->
+  <div class="page" id="page-denied">
+    <div class="gate-icon">🔒</div>
+    <div class="gate-title" id="denied-title">链接已失效</div>
+    <div class="gate-sub" id="denied-sub">该测试链接已被使用或不存在。<br>请联系卖家获取新的测试链接。</div>
+  </div>
+
+  <!-- START -->
+  <div class="page" id="page-start">
+    <div class="hero-icon">🔭</div>
+    <div class="hero-title">未来对象测试</div>
+    <div class="hero-sub">15 道题<br>看看你的未来对象是什么类型</div>
+    <button class="btn-start" onclick="startQuiz()">开始测试</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="page" id="page-quiz">
+    <div class="quiz-header">
+      <div class="quiz-counter"><span class="accent" id="quiz-current">1</span> / 15</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div class="question-card">
+      <div class="question-num" id="question-num">第 1 题</div>
+      <div class="question-title" id="question-title"></div>
+      <div class="options" id="options-container"></div>
+    </div>
+    <div class="share-hint">点击选项自动进入下一题</div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="page" id="page-loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">正在生成结果...</div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="page" id="page-result">
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-type-badge" id="result-badge"></div>
+        <div class="result-main-title" id="result-type-name"></div>
+      </div>
+      <div class="result-body">
+        <div class="section">
+          <div class="section-label">✦ 你的性格</div>
+          <div class="section-text" id="result-personality"></div>
+        </div>
+        <div class="section">
+          <div class="section-label">✦ 未来对象</div>
+          <div class="section-text" id="result-partner"></div>
+        </div>
+        <div class="section">
+          <div class="section-label">✦ 缘分线索</div>
+          <div class="fate-grid" id="fate-grid"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-retry" onclick="restart()">再测一次</button>
+    <div class="share-hint">截图保存结果</div>
+  </div>
+
+</div>
+
+<script>
+// ============ DATA ============
+const TYPES = { W: "温柔型", L: "理性型", Z: "自由型", C: "成长型", M: "慢热型" };
+const TYPE_EMOJI = { W: "🌸", L: "💵", Z: "🌶️", C: "🌱", M: "🐽" };
+
+const questions = [
+  { id:1, title:"如果突然获得3天假期，你最想？", options:[{text:"在家彻底放松",type:"W"},{text:"约朋友出去玩",type:"M"},{text:"去没去过的地方看看",type:"Z"}] },
+  { id:2, title:"别人第一次见到你，最容易觉得你是？", options:[{text:"好相处",type:"W"},{text:"有主见",type:"C"},{text:"有点神秘",type:"M"}] },
+  { id:3, title:"如果收到一份意外礼物，你更在意？", options:[{text:"对方是否用心",type:"W"},{text:"礼物是否实用",type:"L"},{text:"礼物是否特别",type:"Z"}] },
+  { id:4, title:"下面哪种生活更吸引你？", options:[{text:"温馨稳定",type:"W"},{text:"不断成长",type:"C"},{text:"自由随性",type:"Z"}] },
+  { id:5, title:"朋友遇到困难时，你通常会？", options:[{text:"安慰陪伴",type:"W"},{text:"帮忙分析",type:"L"},{text:"直接行动解决",type:"C"}] },
+  { id:6, title:"你更喜欢哪种电影？", options:[{text:"温情治愈",type:"W"},{text:"悬疑推理",type:"L"},{text:"冒险奇幻",type:"Z"}] },
+  { id:7, title:"你认为感情最重要的是？", options:[{text:"信任",type:"W"},{text:"理解",type:"M"},{text:"心动",type:"Z"}] },
+  { id:8, title:"如果搬到新城市，你会先？", options:[{text:"了解周边环境",type:"L"},{text:"认识新朋友",type:"M"},{text:"探索好玩的地方",type:"Z"}] },
+  { id:9, title:"你更欣赏什么样的人？", options:[{text:"温柔善良",type:"W"},{text:"成熟可靠",type:"L"},{text:"独立自信",type:"C"}] },
+  { id:10, title:"当计划被打乱时，你通常？", options:[{text:"有点失落",type:"M"},{text:"重新安排",type:"L"},{text:"顺其自然",type:"Z"}] },
+  { id:11, title:"你更喜欢哪种聊天方式？", options:[{text:"深入交流",type:"M"},{text:"轻松闲聊",type:"W"},{text:"一起做事",type:"C"}] },
+  { id:12, title:"如果有机会学习新技能，你会选？", options:[{text:"绘画音乐",type:"M"},{text:"投资商业",type:"C"},{text:"户外旅行",type:"Z"}] },
+  { id:13, title:"以下哪句话更符合你？", options:[{text:"平平淡淡才是真",type:"W"},{text:"努力改变未来",type:"C"},{text:"人生应该大胆尝试",type:"Z"}] },
+  { id:14, title:"面对重要选择时，你更相信？", options:[{text:"内心感受",type:"M"},{text:"逻辑分析",type:"L"},{text:"实际经验",type:"C"}] },
+  { id:15, title:"如果未来另一半出现，你最希望Ta？", options:[{text:"理解你",type:"M"},{text:"支持你",type:"C"},{text:"陪你探索世界",type:"Z"}] }
+];
+
+const personalityTemplates = {
+  W: "你是一个重感情的人。你很在意人与人之间的真诚，也愿意为重要的人付出时间和精力。相比轰轰烈烈的故事，你更向往细水长流的陪伴。",
+  L: "你习惯先思考再行动。面对问题时，你更愿意分析原因，而不是被情绪左右。很多人觉得你可靠，因为你总能保持冷静。",
+  Z: "你不喜欢被固定规则束缚。对于未知的事物，你总是保持好奇心。你喜欢按照自己的节奏生活。",
+  C: "你对未来有自己的目标。你愿意学习，也愿意不断突破自己。比起安于现状，你更享受进步带来的满足感。",
+  M: "你不会轻易向别人敞开心扉。但一旦建立信任，你会展现出最真诚的一面。你珍视每一段来之不易的关系。"
+};
+
+const partnerTemplates = {
+  W: "你的未来对象是一个温柔且有耐心的人。Ta懂得倾听，也愿意理解你的想法。",
+  L: "你的未来对象成熟可靠。Ta做事有规划，责任感很强，能够给你安全感。",
+  Z: "你的未来对象阳光开朗。Ta喜欢探索世界，总能带给你新的惊喜。",
+  C: "你的未来对象独立自信。Ta有自己的目标和事业，你们会互相欣赏。",
+  M: "你的未来对象重视精神交流。Ta更在意彼此是否真正理解对方。"
+};
+
+const meetWays = ["一次偶然的相遇", "朋友介绍", "工作或学习场景", "兴趣爱好圈子", "网络社交平台"];
+const ageGaps = ["Ta比你大3-5岁", "Ta比你大5岁以上", "你们同龄", "Ta比你小1-3岁", "年龄差超过5岁"];
+const jobs = ["互联网科技", "教育医疗", "金融管理", "设计艺术", "自由职业"];
+const loveModes = ["细水长流", "一见倾心", "共同成长", "欢喜冤家", "命运安排"];
+
+const fateEmojis = {
+  meet: ["✨", "🎮", "🌈", "🛆", "📫"],
+  job: ["💇", "🏞", "📳", "🎹", "✈️"],
+  age: ["👖🏻", "👖🏾", "🤌", "👖🏼", "👆🏻"],
+  mode: ["🌠", "🎊", "🌡", "🛅", "🛁"]
+};
+
+// ============ STATE ============
+let score = {}, currentIndex = 0, quizTimer = null, resultData = null;
+let authToken = null, authSession = null;
+
+// ============ INIT ============
+(async function init() {
+  const params = new URLSearchParams(window.location.search);
+  authToken = params.get('token');
+
+  if (!authToken) {
+    showDenied('缺少访问令牌', '请使用正确的测试链接访问。');
+    return;
+  }
+
+  // Store session in URL or localStorage
+  authSession = params.get('session') || localStorage.getItem('fp_session_' + authToken);
+
+  try {
+    const sessionParam = authSession ? '&session=' + encodeURIComponent(authSession) : '';
+    const resp = await fetch('/api/validate?token=' + encodeURIComponent(authToken) + sessionParam);
+    const data = await resp.json();
+
+    if (!data.valid) {
+      const reasons = {
+        'already_used': ['链接已使用', '该测试链接已被使用过，每个链接仅限一人测试。请联系卖家获取新链接。'],
+        'in_use': ['链接正在使用中', '该测试链接正在被其他人使用，请稍后再试或联系卖家。'],
+        'invalid_token': ['链接无效', '该测试链接不存在。请联系卖家获取正确的链接。'],
+        'missing_token': ['缺少令牌', '请使用正确的测试链接访问。']
+      };
+      const [title, sub] = reasons[data.reason] || ['访问被拒绝', '请联系卖家获取有效的测试链接。'];
+      showDenied(title, sub);
+      return;
+    }
+
+    authSession = data.session;
+    localStorage.setItem('fp_session_' + authToken, authSession);
+    showPage('start');
+  } catch (e) {
+    showDenied('网络错误', '无法连接到服务器，请检查网络后重试。');
+  }
+})();
+
+// ============ TOKEN COMPLETE ============
+async function markComplete() {
+  try {
+    await fetch('/api/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: authToken, session: authSession })
+    });
+    localStorage.removeItem('fp_session_' + authToken);
+  } catch (e) {
+    // Silently fail — result still shows
+  }
+}
+
+// ============ PAGE SWITCHING ============
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+}
+
+function showDenied(title, sub) {
+  document.getElementById('denied-title').textContent = title;
+  document.getElementById('denied-sub').textContent = sub;
+  showPage('denied');
+}
+
+// ============ START ============
+function startQuiz() {
+  score = { W: 0, L: 0, Z: 0, C: 0, M: 0 };
+  currentIndex = 0;
+  showPage('quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentIndex];
+  document.getElementById('quiz-current').textContent = currentIndex + 1;
+  document.getElementById('progress-fill').style.width = (currentIndex / questions.length * 100) + '%';
+  document.getElementById('question-num').textContent = '第 ' + q.id + ' 题';
+  document.getElementById('question-title').textContent = q.title;
+  document.getElementById('options-container').innerHTML = q.options.map((opt, idx) =>
+    '<div class="option" data-type="' + opt.type + '" data-idx="' + idx + '" onclick="selectOption(this)">' + opt.text + '</div>'
+  ).join('');
+}
+
+function selectOption(el) {
+  if (el.parentElement.querySelector('.selected')) return;
+  score[el.dataset.type] += 1;
+  const all = el.parentElement.querySelectorAll('.option');
+  all.forEach(o => o.classList.add('faded'));
+  el.classList.add('selected');
+  clearTimeout(quizTimer);
+  quizTimer = setTimeout(() => {
+    currentIndex++;
+    if (currentIndex < questions.length) renderQuestion();
+    else showResult();
+  }, 350);
+}
+
+function showResult() {
+  showPage('loading');
+  // Mark complete in background
+  markComplete();
+  setTimeout(() => {
+    const sorted = Object.entries(score).sort((a, b) => b[1] - a[1]);
+    const mainType = sorted[0][0], secondType = sorted[1][0];
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+    const meetWay = pick(meetWays), job = pick(jobs), ageGap = pick(ageGaps), loveMode = pick(loveModes);
+
+    resultData = {
+      typeName: TYPES[mainType],
+      typeEmoji: TYPE_EMOJI[mainType],
+      personalityText: personalityTemplates[mainType],
+      partnerText: partnerTemplates[secondType],
+      fateItems: [
+        { emoji: fateEmojis.meet[meetWays.indexOf(meetWay)], label: '相遇方式', value: meetWay },
+        { emoji: fateEmojis.job[jobs.indexOf(job)], label: '职业方向', value: job },
+        { emoji: fateEmojis.age[ageGaps.indexOf(ageGap)], label: '年龄差', value: ageGap },
+        { emoji: fateEmojis.mode[loveModes.indexOf(loveMode)], label: '恋爱模式', value: loveMode }
+      ]
+    };
+
+    document.getElementById('result-badge').textContent = resultData.typeEmoji + ' ' + resultData.typeName;
+    document.getElementById('result-type-name').textContent = resultData.typeName;
+    document.getElementById('result-personality').textContent = resultData.personalityText;
+    document.getElementById('result-partner').textContent = resultData.partnerText;
+    document.getElementById('fate-grid').innerHTML = resultData.fateItems.map(i =>
+      '<div class="fate-item"><div class="fate-emoji">' + i.emoji + '</div><div class="fate-label">' + i.label + '</div><div class="fate-value">' + i.value + '</div></div>'
+    ).join('');
+    showPage('result');
+  }, 1800);
+}
+
+function restart() { showPage('start'); }
+</script>
+</body>
+</html>
