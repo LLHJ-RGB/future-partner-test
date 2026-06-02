@@ -1,0 +1,11 @@
+[build]
+  command = "echo 'no build'"
+  publish = "public"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
